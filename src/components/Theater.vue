@@ -1,5 +1,6 @@
 <template lang="pug">
   .theater(@wheel.prevent="wheel")
+
     .cards(:class="{isCartOpen:isCartOpen}")
       .card(v-for="movie in movies")
         .left
@@ -19,6 +20,7 @@
 
     .control(:class="{isCartOpen: isCartOpen}")
       .panel
+        i.fa.fa-shopping-cart(style="font-size: 40px")
         h2 my movie card
         ul(v-if="cart.length>0")
           li(v-for="(movie, mid) in cart")
@@ -33,7 +35,6 @@
 
 
 <script>
-// 48:05
 import axios from "axios";
 import TweenMax from "gsap/TweenMax";
 export default {
@@ -41,6 +42,7 @@ export default {
 
   data: function() {
     return {
+      wheelLeft: 0,
       movies: [],
       cart: [],
       currentMovie: null,
@@ -57,13 +59,16 @@ export default {
     bgcss(url) {
       return {
         "background-image": `url(${url})`,
-        "background-position": `center center`,
-        "backgound-size": `cover`
+        "background-size": `cover`,
+        "background-position": `center center`
       };
     },
     wheel(e) {
+      this.wheelLeft = this.wheelLeft + e.deltaY * -2;
+      if (this.wheelLeft > 0) this.wheelLeft = 0;
+      if (this.wheelLeft < -2000) this.wheelLeft = -2000;
       TweenMax.to(`.cards`, 0.5, {
-        left: `+=${e.deltaY * 2}px`
+        left: `${this.wheelLeft}px`
       });
     },
     addCart(movie, e) {
@@ -156,7 +161,7 @@ export default {
       flex: 1;
 
       .cover {
-        @include size(180px, 200px);
+        @include size(180px, 240px);
         @include bxshadow();
         border-radius: 5px;
         position: relative;
