@@ -1,21 +1,7 @@
-language: node_js
-node_js: stable
-branches:
-  only:
-  - develop
-cache:
-  directories:
-  - node_modules
-script:
-  - npm install
-after_success:
-  - npm run build
-  - cd dist
-  - git add --all .
-  - git commit --message "Automatically update from travis-ci"
-  - git push --quiet "https://${GH_TOKEN}@${GH_REF}" gh-pages:gh-pages
-
-# Note: you should set Environment Variables here or 'Settings' on travis-ci.org
-env:
-  global:
-    - GH_REF: github.com/sss63232/vue-demo.git
+deploy:
+  provider: pages
+  skip-cleanup: true
+  github-token: $GH_TOKEN  # Set in the settings page of your repository, as a secure variable
+  keep-history: true
+  on:
+    branch: develop
